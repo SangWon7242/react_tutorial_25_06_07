@@ -34,6 +34,21 @@ const NumberRecordForm = ({
   );
 };
 
+interface NumberRecordItemProps {
+  record: number;
+  removeRecord: (index: number) => void;
+}
+
+const NumberRecordItem = ({ record, removeRecord }: NumberRecordItemProps) => {
+  return (
+    <li>
+      <span>{record}</span>
+      &nbsp;
+      <button onClick={() => removeRecord(record)}>삭제</button>
+    </li>
+  );
+};
+
 interface NumberRecordListProps {
   records: number[];
   removeRecord: (index: number) => void;
@@ -50,12 +65,11 @@ const NumberRecordList = ({ records, removeRecord }: NumberRecordListProps) => {
             <h1 className="text-lg font-bold">기록</h1>
             <ul>
               {records.map((record, index) => (
-                <li key={index}>
-                  <span>{index + 1}번 : </span>
-                  <span>{record}</span>
-                  &nbsp;
-                  <button onClick={() => removeRecord(index)}>삭제</button>
-                </li>
+                <NumberRecordItem
+                  key={index} // 식별하는 수단
+                  record={record}
+                  removeRecord={removeRecord}
+                />
               ))}
             </ul>
           </>
