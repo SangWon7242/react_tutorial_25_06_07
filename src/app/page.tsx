@@ -40,15 +40,18 @@ interface NumberRecordItemProps {
 }
 
 const NumberRecordItem = ({ record, removeRecord }: NumberRecordItemProps) => {
-  const [editModeStatus, setEditModeStatus] = useState(false);
+  const [inputedNumber, setInputedNumber] = useState<number>(record);
+  const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
 
   if (editModeStatus) {
     return (
       <li>
+        {/* 입력값이 변경되면 setInputedNumber를 호출하여 inputedNumber를 변경 */}
+        {/* e.target.value는 string이기 때문에 Number로 변환 */}
         <input
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setInputedNumber(Number(e.target.value))}
           type="number"
-          value={record}
+          value={inputedNumber}
         />
         &nbsp;
         <button onClick={() => setEditModeStatus(false)}>수정</button>
