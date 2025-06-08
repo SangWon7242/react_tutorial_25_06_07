@@ -1,32 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { json } from "stream/consumers";
 
 export default function App() {
   const [count, setCount] = useState<number>(0);
   const [records, setRecords] = useState<number[]>([]);
 
+  const increaseNumber = () => {
+    setCount(count + 1);
+  };
+
+  const decreaseNumber = () => {
+    setCount(count - 1);
+  };
+
+  const recordNumber = () => {
+    if (count === 0) return;
+
+    setCount(0);
+    setRecords([...records, count]);
+  };
+
+  const clearRecords = () => {
+    setCount(0);
+    setRecords([]);
+  };
+
   return (
     <>
       <div>count : {count}</div>
       <div className="btn-group">
-        <button onClick={() => setCount(count + 1)}>증가</button>
+        <button onClick={increaseNumber}>증가</button>
         &nbsp;
-        <button onClick={() => setCount(count - 1)}>감소</button>
+        <button onClick={decreaseNumber}>감소</button>
         &nbsp;
-        <button
-          onClick={() => {
-            if (count === 0) return;
-
-            setCount(0);
-            setRecords([...records, count]);
-          }}
-        >
-          기록
-        </button>
+        <button onClick={recordNumber}>기록</button>
         &nbsp;
-        <button onClick={() => setRecords([])}>초기화</button>
+        <button onClick={clearRecords}>초기화</button>
       </div>
       <div className="recordForm">
         {records.length === 0 ? (
