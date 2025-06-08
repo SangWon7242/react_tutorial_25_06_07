@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { json } from "stream/consumers";
 
 export default function App() {
   const [count, setCount] = useState<number>(0);
-  const [record, setRecord] = useState<number | null>(null);
+  const [records, setRecords] = useState<number[]>([]);
 
   return (
     <>
@@ -19,21 +20,21 @@ export default function App() {
             if (count === 0) return;
 
             setCount(0);
-            setRecord(count);
+            setRecords([...records, count]);
           }}
         >
           기록
         </button>
         &nbsp;
-        <button onClick={() => setRecord(null)}>초기화</button>
+        <button onClick={() => setRecords([])}>초기화</button>
       </div>
       <div className="recordForm">
-        {record == null ? (
+        {records.length === 0 ? (
           <h1 className="text-lg font-bold">기록이 없습니다.</h1>
         ) : (
           <>
             <h1 className="text-lg font-bold">기록</h1>
-            <div>기록 : {record}</div>
+            <div>기록 : {JSON.stringify(records)}</div>
           </>
         )}
       </div>
