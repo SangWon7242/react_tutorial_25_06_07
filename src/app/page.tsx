@@ -36,46 +36,74 @@ const NumberRecordForm = ({
 
 interface NumberRecordItemProps {
   record: number;
+  index: number;
   removeRecord: (index: number) => void;
+  modifyRecord: (index: number, newNumber: number) => void;
 }
 
-const NumberRecordItem = ({ record, removeRecord }: NumberRecordItemProps) => {
+const NumberRecordItem = ({
+  record,
+  index,
+  removeRecord,
+  modifyRecord,
+}: NumberRecordItemProps) => {
   const [inputedNumber, setInputedNumber] = useState<number>(record);
   const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
 
-  if (editModeStatus) {
-    return (
-      <li>
-        {/* 입력값이 변경되면 setInputedNumber를 호출하여 inputedNumber를 변경 */}
-        {/* e.target.value는 string이기 때문에 Number로 변환 */}
-        <input
-          onChange={(e) => setInputedNumber(Number(e.target.value))}
-          type="number"
-          value={inputedNumber}
-        />
-        &nbsp;
-        <button onClick={() => setEditModeStatus(false)}>수정</button>
-      </li>
-    );
-  }
-
-  return (
-    <li>
+  const readView = (
+    <>
       <span>{record}</span>
       &nbsp;
-      <button onClick={() => removeRecord(record)}>삭제</button>
+      <button onClick={() => removeRecord(index)}>삭제</button>
       &nbsp;
       <button onClick={() => setEditModeStatus(true)}>수정</button>
-    </li>
+    </>
   );
+
+  const editView = (
+    <>
+      {/* 입력값이 변경되면 setInputedNumber를 호출하여 inputedNumber를 변경 */}
+      {/* e.target.value는 string이기 때문에 Number로 변환 */}
+      <input
+        onChange={(e) => setInputedNumber(Number(e.target.value))}
+        type="number"
+        value={inputedNumber}
+      />
+      &nbsp;
+      <button
+        onClick={() => {
+          modifyRecord(index, inputedNumber);
+          setEditModeStatus(false);
+        }}
+      >
+        수정 완료
+      </button>
+      &nbsp;
+      <button
+        onClick={() => {
+          setInputedNumber(record);
+          setEditModeStatus(false);
+        }}
+      >
+        수정 취소
+      </button>
+    </>
+  );
+
+  return <li>{editModeStatus ? editView : readView}</li>;
 };
 
 interface NumberRecordListProps {
   records: number[];
   removeRecord: (index: number) => void;
+  modifyRecord: (index: number, newNumber: number) => void;
 }
 
-const NumberRecordList = ({ records, removeRecord }: NumberRecordListProps) => {
+const NumberRecordList = ({
+  records,
+  removeRecord,
+  modifyRecord,
+}: NumberRecordListProps) => {
   return (
     <>
       <div className="recordForm">
@@ -89,7 +117,9 @@ const NumberRecordList = ({ records, removeRecord }: NumberRecordListProps) => {
                 <NumberRecordItem
                   key={index} // 식별하는 수단
                   record={record}
+                  index={index}
                   removeRecord={removeRecord}
+                  modifyRecord={modifyRecord}
                 />
               ))}
             </ul>
@@ -124,6 +154,14 @@ export default function App() {
     setRecords([]);
   };
 
+  const modifyRecord = (index: number, newNumber: number) => {
+    const newNumbers = records.map((_number, _index) =>
+      _index === index ? newNumber : _number
+    );
+
+    setRecords(newNumbers);
+  };
+
   const removeRecord = (index: number) => {
     setRecords(records.filter((_, _index) => _index !== index));
   };
@@ -137,7 +175,11 @@ export default function App() {
         recordNumber={recordNumber}
         clearRecords={clearRecords}
       />
-      <NumberRecordList records={records} removeRecord={removeRecord} />
+      <NumberRecordList
+        records={records}
+        removeRecord={removeRecord}
+        modifyRecord={modifyRecord}
+      />
     </>
   );
 }
