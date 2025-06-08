@@ -34,7 +34,13 @@ export default function App() {
         ) : (
           <>
             <h1 className="text-lg font-bold">기록</h1>
-            <div>기록 : {JSON.stringify(records)}</div>
+            <ul>
+              {records.map((record, index) => (
+                <li key={index}>
+                  {index + 1}번 : {record}
+                </li>
+              ))}
+            </ul>
           </>
         )}
       </div>
