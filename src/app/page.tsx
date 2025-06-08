@@ -40,11 +40,29 @@ interface NumberRecordItemProps {
 }
 
 const NumberRecordItem = ({ record, removeRecord }: NumberRecordItemProps) => {
+  const [editModeStatus, setEditModeStatus] = useState(false);
+
+  if (editModeStatus) {
+    return (
+      <li>
+        <input
+          onChange={(e) => console.log(e.target.value)}
+          type="number"
+          value={record}
+        />
+        &nbsp;
+        <button onClick={() => setEditModeStatus(false)}>수정</button>
+      </li>
+    );
+  }
+
   return (
     <li>
       <span>{record}</span>
       &nbsp;
       <button onClick={() => removeRecord(record)}>삭제</button>
+      &nbsp;
+      <button onClick={() => setEditModeStatus(true)}>수정</button>
     </li>
   );
 };
