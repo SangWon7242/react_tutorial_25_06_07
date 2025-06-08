@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function App() {
   const [count, setCount] = useState<number>(0);
-  const [records, setRecords] = useState<number[]>([]);
+  const [records, setRecords] = useState<number[]>([10, 20, 30, 40, 50]);
 
   const increaseNumber = () => {
     setCount(count + 1);
@@ -24,6 +24,10 @@ export default function App() {
   const clearRecords = () => {
     setCount(0);
     setRecords([]);
+  };
+
+  const removeRecord = (index: number) => {
+    setRecords(records.filter((_, _index) => _index !== index));
   };
 
   return (
@@ -47,7 +51,10 @@ export default function App() {
             <ul>
               {records.map((record, index) => (
                 <li key={index}>
-                  {index + 1}번 : {record}
+                  <span>{index + 1}번 : </span>
+                  <span>{record}</span>
+                  &nbsp;
+                  <button onClick={() => removeRecord(index)}>삭제</button>
                 </li>
               ))}
             </ul>
