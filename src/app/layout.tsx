@@ -19,12 +19,18 @@ const Header = () => {
             리액트 튜토리얼
           </Link>
         </div>
-        <nav className="menu-list">
+        <nav className="menu-list flex gap-2">
           <Link
             href="/numberRecord"
             className="px-4 py-2 rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors duration-200 font-medium"
           >
             숫자 기록 앱
+          </Link>
+          <Link
+            href="/todo"
+            className="px-4 py-2 rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors duration-200 font-medium"
+          >
+            TODO 앱
           </Link>
         </nav>
       </div>
