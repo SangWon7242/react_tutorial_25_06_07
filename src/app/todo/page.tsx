@@ -54,18 +54,21 @@ const NewTodoForm = ({
 interface NewTodoListProps {
   todos: string[];
   removeTodo: (index: number) => void;
+  modifyTodo: (index: number, inputedTodo: string) => void;
 }
 
 interface TodoListItemProps {
   todo: string;
   index: number;
   removeTodo: (index: number) => void;
+  modifyTodo: (index: number, inputedTodo: string) => void;
 }
 
 const TodoListItem = ({
   todo,
   index,
   removeTodo: _removeTodo,
+  modifyTodo: _modifyTodo,
 }: TodoListItemProps) => {
   const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
   const [inputedTodo, setInputedTodo] = useState<string>(todo);
@@ -75,6 +78,7 @@ const TodoListItem = ({
   };
 
   const cancelEditModeStatus = () => {
+    setInputedTodo(todo);
     setEditModeStatus(false);
   };
 
@@ -84,17 +88,25 @@ const TodoListItem = ({
     }
   };
 
+  const modifyTodo = () => {
+    _modifyTodo(index, inputedTodo);
+    setEditModeStatus(false);
+
+    alert("수정이 완료되었습니다.");
+  };
+
   return (
     <>
       {editModeStatus ? (
         <li className="flex gap-x-2 items-center">
+          <span>{index + 1}번</span>
           <input
             type="text"
             value={inputedTodo}
             onChange={(e) => setInputedTodo(e.target.value)}
             className="input input-bordered"
           />
-          <button onClick={changeEditModeStatus} className="btn btn-primary">
+          <button onClick={modifyTodo} className="btn btn-primary">
             수정
           </button>
           <button onClick={cancelEditModeStatus} className="btn btn-secondary">
@@ -120,7 +132,7 @@ const TodoListItem = ({
   );
 };
 
-const NewTodoList = ({ todos, removeTodo }: NewTodoListProps) => {
+const NewTodoList = ({ todos, removeTodo, modifyTodo }: NewTodoListProps) => {
   return (
     <>
       {todos.length === 0 ? (
@@ -135,6 +147,7 @@ const NewTodoList = ({ todos, removeTodo }: NewTodoListProps) => {
                 index={index}
                 todo={todo}
                 removeTodo={removeTodo}
+                modifyTodo={modifyTodo}
               />
             ))}
           </ul>
@@ -164,10 +177,22 @@ export default function Todo() {
     setTodos(newTodos);
   };
 
+  const modifyTodo = (index: number, inputedTodo: string) => {
+    const newTodos = todos.map((todo, _index) =>
+      _index === index ? inputedTodo : todo
+    );
+
+    setTodos(newTodos);
+  };
+
   return (
     <>
       <NewTodoForm addTodo={addTodo} clearTodos={clearTodos} />
-      <NewTodoList todos={todos} removeTodo={removeTodo} />
+      <NewTodoList
+        todos={todos}
+        removeTodo={removeTodo}
+        modifyTodo={modifyTodo}
+      />
     </>
   );
 }
