@@ -67,6 +67,16 @@ const TodoListItem = ({
   index,
   removeTodo: _removeTodo,
 }: TodoListItemProps) => {
+  const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
+
+  const changeEditModeStatus = () => {
+    setEditModeStatus(!editModeStatus);
+  };
+
+  const cancelEditModeStatus = () => {
+    setEditModeStatus(false);
+  };
+
   const removeTodo = () => {
     if (confirm("정말 삭제하시겠습니까?")) {
       _removeTodo(index);
@@ -74,16 +84,33 @@ const TodoListItem = ({
   };
 
   return (
-    <li className="flex gap-x-2 items-center">
-      <span>
-        {index + 1}번 : {todo}
-      </span>
-      <div className="flex gap-x-">
-        <button onClick={removeTodo} className="btn btn-error">
-          삭제
-        </button>
-      </div>
-    </li>
+    <>
+      {editModeStatus ? (
+        <li className="flex gap-x-2 items-center">
+          <input type="text" value={todo} className="input input-bordered" />
+          <button onClick={changeEditModeStatus} className="btn btn-primary">
+            수정
+          </button>
+          <button onClick={cancelEditModeStatus} className="btn btn-secondary">
+            취소
+          </button>
+        </li>
+      ) : (
+        <li className="flex gap-x-2 items-center">
+          <span>
+            {index + 1}번 : {todo}
+          </span>
+          <div className="flex gap-x-2">
+            <button onClick={removeTodo} className="btn btn-error">
+              삭제
+            </button>
+            <button onClick={changeEditModeStatus} className="btn btn-warning">
+              수정
+            </button>
+          </div>
+        </li>
+      )}
+    </>
   );
 };
 
