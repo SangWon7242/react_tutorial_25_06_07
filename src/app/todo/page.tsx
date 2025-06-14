@@ -52,8 +52,20 @@ export default function Todo() {
       />
       <div>
         <>
-          <h1>할 일 목록</h1>
-          {JSON.stringify(todos)}
+          {todos.length == 0 ? (
+            <h1 className="text-2xl">할 일이 없습니다.</h1>
+          ) : (
+            <>
+              <h1 className="text-2xl">할 일 목록</h1>
+              <ul>
+                {todos.map((todo, index) => (
+                  <li key={index}>
+                    {index + 1} : {todo}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </>
       </div>
     </>
