@@ -36,22 +36,31 @@ const NewTodoForm = ({
 
 interface NewTodoListProps {
   todos: string[];
+  removeTodo: (index: number) => void;
 }
 
 interface TodoListItemProps {
   todo: string;
   index: number;
+  removeTodo: (index: number) => void;
 }
 
-const TodoListItem = ({ todo, index }: TodoListItemProps) => {
+const TodoListItem = ({ todo, index, removeTodo }: TodoListItemProps) => {
   return (
-    <li>
-      {index + 1}번 : {todo}
+    <li className="flex gap-x-2 items-center">
+      <span>
+        {index + 1}번 : {todo}
+      </span>
+      <div className="flex gap-x-">
+        <button onClick={() => removeTodo(index)} className="btn btn-error">
+          삭제
+        </button>
+      </div>
     </li>
   );
 };
 
-const NewTodoList = ({ todos }: NewTodoListProps) => {
+const NewTodoList = ({ todos, removeTodo }: NewTodoListProps) => {
   return (
     <>
       {todos.length === 0 ? (
@@ -61,7 +70,12 @@ const NewTodoList = ({ todos }: NewTodoListProps) => {
           <h1 className="text-xl font-bold">할 일 목록</h1>
           <ul>
             {todos.map((todo, index) => (
-              <TodoListItem key={index} index={index} todo={todo} />
+              <TodoListItem
+                key={index}
+                index={index}
+                todo={todo}
+                removeTodo={removeTodo}
+              />
             ))}
           </ul>
         </>
@@ -88,6 +102,13 @@ export default function Todo() {
     setTodos([]);
   };
 
+  const removeTodo = (index: number) => {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      const newTodos = todos.filter((_, _index) => _index !== index);
+      setTodos(newTodos);
+    }
+  };
+
   return (
     <>
       <NewTodoForm
@@ -96,7 +117,7 @@ export default function Todo() {
         addTodo={addTodo}
         clearTodos={clearTodos}
       />
-      <NewTodoList todos={todos} />
+      <NewTodoList todos={todos} removeTodo={removeTodo} />
     </>
   );
 }
