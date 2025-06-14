@@ -3,18 +3,20 @@
 import { useState } from "react";
 
 interface NewTodoFormProps {
-  newTodoContent: string;
-  setNewTodoContent: (newTodoContent: string) => void;
-  addTodo: () => void;
+  addTodo: (
+    newTodoContent: string,
+    setNewTodoContent: (newTodoContent: string) => void
+  ) => void;
   clearTodos: () => void;
 }
 
-const NewTodoForm = ({
-  newTodoContent,
-  setNewTodoContent,
-  addTodo,
-  clearTodos,
-}: NewTodoFormProps) => {
+let NewTodoFormCount = 0;
+
+const NewTodoForm = ({ addTodo, clearTodos }: NewTodoFormProps) => {
+  console.log(`NewTodoFormCount 실행 : ${++NewTodoFormCount}`);
+
+  const [newTodoContent, setNewTodoContent] = useState<string>("");
+
   return (
     <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
       <input
@@ -24,7 +26,10 @@ const NewTodoForm = ({
         onChange={(e) => setNewTodoContent(e.target.value)}
         className="input input-bordered"
       />
-      <button onClick={addTodo} className="btn btn-primary">
+      <button
+        onClick={() => addTodo(newTodoContent, setNewTodoContent)}
+        className="btn btn-primary"
+      >
         할 일 추가
       </button>
       <button onClick={clearTodos} className="btn btn-secondary">
@@ -84,11 +89,17 @@ const NewTodoList = ({ todos, removeTodo }: NewTodoListProps) => {
   );
 };
 
+let TodoCount = 0;
+
 export default function Todo() {
-  const [newTodoContent, setNewTodoContent] = useState<string>("");
+  console.log(`TodoCount 실행 : ${++TodoCount}`);
+
   const [todos, setTodos] = useState<string[]>([]);
 
-  const addTodo = () => {
+  const addTodo = (
+    newTodoContent: string,
+    setNewTodoContent: (newTodoContent: string) => void
+  ) => {
     if (newTodoContent.trim() === "") {
       alert("할 일 내용을 입력해주세요.");
       return;
@@ -111,12 +122,7 @@ export default function Todo() {
 
   return (
     <>
-      <NewTodoForm
-        newTodoContent={newTodoContent}
-        setNewTodoContent={setNewTodoContent}
-        addTodo={addTodo}
-        clearTodos={clearTodos}
-      />
+      <NewTodoForm addTodo={addTodo} clearTodos={clearTodos} />
       <NewTodoList todos={todos} removeTodo={removeTodo} />
     </>
   );
