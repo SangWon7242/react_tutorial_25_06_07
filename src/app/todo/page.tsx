@@ -68,6 +68,7 @@ const TodoListItem = ({
   removeTodo: _removeTodo,
 }: TodoListItemProps) => {
   const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
+  const [inputedTodo, setInputedTodo] = useState<string>(todo);
 
   const changeEditModeStatus = () => {
     setEditModeStatus(!editModeStatus);
@@ -87,7 +88,12 @@ const TodoListItem = ({
     <>
       {editModeStatus ? (
         <li className="flex gap-x-2 items-center">
-          <input type="text" value={todo} className="input input-bordered" />
+          <input
+            type="text"
+            value={inputedTodo}
+            onChange={(e) => setInputedTodo(e.target.value)}
+            className="input input-bordered"
+          />
           <button onClick={changeEditModeStatus} className="btn btn-primary">
             수정
           </button>
