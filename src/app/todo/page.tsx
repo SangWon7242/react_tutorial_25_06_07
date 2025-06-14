@@ -9,7 +9,10 @@ interface NewTodoFormProps {
 
 let NewTodoFormCount = 0;
 
-const NewTodoForm = ({ addTodo: _addTodo, clearTodos }: NewTodoFormProps) => {
+const NewTodoForm = ({
+  addTodo: _addTodo,
+  clearTodos: _clearTodos,
+}: NewTodoFormProps) => {
   console.log(`NewTodoFormCount 실행 : ${++NewTodoFormCount}`);
 
   const [newTodoContent, setNewTodoContent] = useState<string>("");
@@ -21,6 +24,11 @@ const NewTodoForm = ({ addTodo: _addTodo, clearTodos }: NewTodoFormProps) => {
     }
 
     _addTodo(newTodoContent);
+    setNewTodoContent("");
+  };
+
+  const clearTodos = () => {
+    _clearTodos();
     setNewTodoContent("");
   };
 
@@ -54,14 +62,24 @@ interface TodoListItemProps {
   removeTodo: (index: number) => void;
 }
 
-const TodoListItem = ({ todo, index, removeTodo }: TodoListItemProps) => {
+const TodoListItem = ({
+  todo,
+  index,
+  removeTodo: _removeTodo,
+}: TodoListItemProps) => {
+  const removeTodo = () => {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      _removeTodo(index);
+    }
+  };
+
   return (
     <li className="flex gap-x-2 items-center">
       <span>
         {index + 1}번 : {todo}
       </span>
       <div className="flex gap-x-">
-        <button onClick={() => removeTodo(index)} className="btn btn-error">
+        <button onClick={removeTodo} className="btn btn-error">
           삭제
         </button>
       </div>
@@ -109,10 +127,8 @@ export default function Todo() {
   };
 
   const removeTodo = (index: number) => {
-    if (confirm("정말 삭제하시겠습니까?")) {
-      const newTodos = todos.filter((_, _index) => _index !== index);
-      setTodos(newTodos);
-    }
+    const newTodos = todos.filter((_, _index) => _index !== index);
+    setTodos(newTodos);
   };
 
   return (
