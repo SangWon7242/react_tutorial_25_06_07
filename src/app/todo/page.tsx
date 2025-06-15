@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { produce } from "immer";
 
 interface NewTodoFormProps {
   addTodo: (newTodoContent: string) => void;
@@ -188,7 +189,21 @@ export default function Todo() {
   const [todos, setTodos] = useState<string[]>([]);
 
   const addTodo = (newTodoContent: string) => {
-    setTodos([...todos, newTodoContent]);
+    const newTodos = [...todos, newTodoContent];
+
+    /*
+    const newTodos = produce(todos, (draft) => {
+      draft.push(newTodoContent);
+    });
+
+    setTodos(newTodos);
+    */
+
+    setTodos(
+      produce(todos, (draft) => {
+        draft.push(newTodoContent);
+      })
+    );
   };
 
   const clearTodos = () => {
@@ -196,16 +211,32 @@ export default function Todo() {
   };
 
   const removeTodo = (index: number) => {
+    /*
     const newTodos = todos.filter((_, _index) => _index !== index);
     setTodos(newTodos);
+    */
+
+    setTodos(
+      produce(todos, (draft) => {
+        draft.splice(index, 1);
+      })
+    );
   };
 
   const modifyTodo = (index: number, inputedTodo: string) => {
+    /*
     const newTodos = todos.map((todo, _index) =>
       _index === index ? inputedTodo : todo
     );
 
     setTodos(newTodos);
+    */
+
+    setTodos(
+      produce(todos, (draft) => {
+        draft[index] = inputedTodo;
+      })
+    );
   };
 
   return (
