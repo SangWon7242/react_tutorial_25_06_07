@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface NewTodoFormProps {
   addTodo: (newTodoContent: string) => void;
@@ -15,38 +15,54 @@ const NewTodoForm = ({
 }: NewTodoFormProps) => {
   console.log(`NewTodoFormCount 실행 : ${++NewTodoFormCount}`);
 
-  const newTodoInputRef = useRef<HTMLInputElement>(null);
-  const [newTodoContent, setNewTodoContent] = useState<string>("");
+  // input을 조작하기 위한 ref
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // input의 value를 조작하기 위한 ref
+  const newTodoContentRef = useRef<string>("");
+
+  // 최초의 한번만 실행
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const addTodo = () => {
-    // ? : 옵셔널 체이닝
-    newTodoInputRef.current?.focus();
+    const currentValue = newTodoContentRef.current;
 
-    if (newTodoContent.trim() === "") {
+    if (currentValue.trim() === "") {
       alert("할 일 내용을 입력해주세요.");
       return;
     }
 
-    _addTodo(newTodoContent);
-    setNewTodoContent("");
+    _addTodo(currentValue);
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      newTodoContentRef.current = "";
+    }
+
+    inputRef.current?.focus();
   };
 
   const clearTodos = () => {
-    newTodoInputRef.current?.focus();
-
     _clearTodos();
-    setNewTodoContent("");
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      newTodoContentRef.current = "";
+    }
+
+    inputRef.current?.focus();
   };
 
   return (
     <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
       <input
         type="text"
-        value={newTodoContent}
         placeholder="새 할 일 추가를 입력해주세요."
-        onChange={(e) => setNewTodoContent(e.target.value)}
+        onChange={(e) => (newTodoContentRef.current = e.target.value)}
         className="input input-bordered"
-        ref={newTodoInputRef}
+        ref={inputRef}
       />
       <button onClick={addTodo} className="btn btn-primary">
         할 일 추가
