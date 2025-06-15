@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface NewTodoFormProps {
   addTodo: (newTodoContent: string) => void;
@@ -15,9 +15,13 @@ const NewTodoForm = ({
 }: NewTodoFormProps) => {
   console.log(`NewTodoFormCount 실행 : ${++NewTodoFormCount}`);
 
+  const newTodoInputRef = useRef<HTMLInputElement>(null);
   const [newTodoContent, setNewTodoContent] = useState<string>("");
 
   const addTodo = () => {
+    // ? : 옵셔널 체이닝
+    newTodoInputRef.current?.focus();
+
     if (newTodoContent.trim() === "") {
       alert("할 일 내용을 입력해주세요.");
       return;
@@ -28,6 +32,8 @@ const NewTodoForm = ({
   };
 
   const clearTodos = () => {
+    newTodoInputRef.current?.focus();
+
     _clearTodos();
     setNewTodoContent("");
   };
@@ -40,6 +46,7 @@ const NewTodoForm = ({
         placeholder="새 할 일 추가를 입력해주세요."
         onChange={(e) => setNewTodoContent(e.target.value)}
         className="input input-bordered"
+        ref={newTodoInputRef}
       />
       <button onClick={addTodo} className="btn btn-primary">
         할 일 추가
