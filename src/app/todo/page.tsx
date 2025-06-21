@@ -88,21 +88,30 @@ interface TodoListItemProps {
   modifyTodo: (index: number, inputedTodo: string) => void;
 }
 
+let TodoListItemCount = 0;
+
 const TodoListItem = ({
   todo,
   index,
   removeTodo: _removeTodo,
   modifyTodo: _modifyTodo,
 }: TodoListItemProps) => {
+  console.log(`TodoListItemCount 실행 : ${++TodoListItemCount}`);
+
   const [editModeStatus, setEditModeStatus] = useState<boolean>(false);
-  const [inputedTodo, setInputedTodo] = useState<string>(todo);
+
+  // todo 값을 저장 하기 위해서 사용
+  const newTodoContentRef = useRef<string>(todo);
+
+  // input 요소에 접근하기 위해서 사용
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const changeEditModeStatus = () => {
     setEditModeStatus(!editModeStatus);
   };
 
   const cancelEditModeStatus = () => {
-    setInputedTodo(todo);
+    newTodoContentRef.current = todo;
     setEditModeStatus(false);
   };
 
@@ -113,11 +122,23 @@ const TodoListItem = ({
   };
 
   const modifyTodo = () => {
-    _modifyTodo(index, inputedTodo);
+    if (newTodoContentRef.current.trim() === "") {
+      alert("할 일 내용을 입력해주세요.");
+      return;
+    }
+
+    _modifyTodo(index, newTodoContentRef.current);
     setEditModeStatus(false);
 
     alert("수정이 완료되었습니다.");
   };
+
+  // 수정 모드가 활성화 되면 input에 포커스
+  useEffect(() => {
+    if (editModeStatus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editModeStatus]);
 
   return (
     <>
@@ -126,9 +147,10 @@ const TodoListItem = ({
           <span>{index + 1}번</span>
           <input
             type="text"
-            value={inputedTodo}
-            onChange={(e) => setInputedTodo(e.target.value)}
+            defaultValue={todo}
+            onChange={(e) => (newTodoContentRef.current = e.target.value)}
             className="input input-bordered"
+            ref={inputRef}
           />
           <button onClick={modifyTodo} className="btn btn-primary">
             수정
@@ -189,7 +211,7 @@ export default function Todo() {
   const [todos, setTodos] = useState<string[]>([]);
 
   const addTodo = (newTodoContent: string) => {
-    const newTodos = [...todos, newTodoContent];
+    // const newTodos = [...todos, newTodoContent];
 
     /*
     const newTodos = produce(todos, (draft) => {
