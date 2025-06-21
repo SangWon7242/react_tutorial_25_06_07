@@ -57,20 +57,31 @@ const NewTodoForm = React.memo(
     };
 
     return (
-      <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="flex flex-col md:flex-row gap-3 mb-8 p-6 bg-white rounded-lg shadow-md"
+      >
         <input
           type="text"
           placeholder="새 할 일 추가를 입력해주세요."
           onChange={(e) => (newTodoContentRef.current = e.target.value)}
-          className="input input-bordered"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           ref={inputRef}
         />
-        <button onClick={addTodo} className="btn btn-primary">
-          할 일 추가
-        </button>
-        <button onClick={clearTodos} className="btn btn-secondary">
-          초기화
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={addTodo}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            할 일 추가
+          </button>
+          <button
+            onClick={clearTodos}
+            className="px-4 py-2 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            초기화
+          </button>
+        </div>
       </form>
     );
   }
@@ -144,38 +155,49 @@ const TodoListItem = React.memo(
     return (
       <>
         {editModeStatus ? (
-          <li className="flex gap-x-2 items-center">
-            <span>{index + 1}번</span>
+          <li className="flex flex-col md:flex-row gap-3 items-center p-4 mb-3 bg-white rounded-lg shadow-sm border-l-4 border-yellow-400 transition-all">
+            <span className="font-medium text-gray-700 min-w-[50px]">
+              {index + 1}번
+            </span>
             <input
               type="text"
               defaultValue={todo}
               onChange={(e) => (newTodoContentRef.current = e.target.value)}
-              className="input input-bordered"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
               ref={inputRef}
             />
-            <button onClick={modifyTodo} className="btn btn-primary">
-              수정
-            </button>
-            <button
-              onClick={cancelEditModeStatus}
-              className="btn btn-secondary"
-            >
-              취소
-            </button>
-          </li>
-        ) : (
-          <li className="flex gap-x-2 items-center">
-            <span>
-              {index + 1}번 : {todo}
-            </span>
-            <div className="flex gap-x-2">
+            <div className="flex gap-2 ml-auto">
               <button
-                onClick={changeEditModeStatus}
-                className="btn btn-warning"
+                onClick={modifyTodo}
+                className="px-3 py-1 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
               >
                 수정
               </button>
-              <button onClick={removeTodo} className="btn btn-error">
+              <button
+                onClick={cancelEditModeStatus}
+                className="px-3 py-1 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              >
+                취소
+              </button>
+            </div>
+          </li>
+        ) : (
+          <li className="flex flex-col md:flex-row gap-3 items-center p-4 mb-3 bg-white rounded-lg shadow-sm border-l-4 border-blue-400 hover:shadow-md transition-all">
+            <span className="font-medium text-gray-700">
+              <span className="inline-block min-w-[50px]">{index + 1}번 :</span>{" "}
+              {todo}
+            </span>
+            <div className="flex gap-2 ml-auto mt-2 md:mt-0">
+              <button
+                onClick={changeEditModeStatus}
+                className="px-3 py-1 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                수정
+              </button>
+              <button
+                onClick={removeTodo}
+                className="px-3 py-1 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
                 삭제
               </button>
             </div>
@@ -191,12 +213,50 @@ TodoListItem.displayName = "TodoListItem";
 const NewTodoList = React.memo(
   ({ todos, removeTodo, modifyTodo }: NewTodoListProps) => {
     return (
-      <>
+      <div className="bg-gray-50 p-6 rounded-lg shadow-md">
         {todos.length === 0 ? (
-          <h1 className="text-xl font-bold">할 일이 없습니다.</h1>
+          <div className="flex flex-col items-center justify-center py-10">
+            <svg
+              className="w-16 h-16 text-gray-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+              ></path>
+            </svg>
+            <h1 className="text-xl font-bold text-gray-700">
+              할 일이 없습니다.
+            </h1>
+            <p className="text-gray-500 mt-2">새로운 할 일을 추가해보세요!</p>
+          </div>
         ) : (
           <>
-            <h1 className="text-xl font-bold">할 일 목록</h1>
+            <h1 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+              <svg
+                className="w-6 h-6 mr-2 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                ></path>
+              </svg>
+              할 일 목록{" "}
+              <span className="ml-2 text-sm bg-blue-500 text-white px-2 py-1 rounded-full">
+                {todos.length}
+              </span>
+            </h1>
             <ul>
               {todos.map((todo, index) => (
                 <TodoListItem
@@ -210,7 +270,7 @@ const NewTodoList = React.memo(
             </ul>
           </>
         )}
-      </>
+      </div>
     );
   }
 );
@@ -222,16 +282,6 @@ export default function Todo() {
 
   const addTodo = useCallback(
     (newTodoContent: string) => {
-      // const newTodos = [...todos, newTodoContent];
-
-      /*
-    const newTodos = produce(todos, (draft) => {
-      draft.push(newTodoContent);
-    });
-
-    setTodos(newTodos);
-    */
-
       setTodos(
         produce(todos, (draft) => {
           draft.push(newTodoContent);
@@ -247,11 +297,6 @@ export default function Todo() {
 
   const removeTodo = useCallback(
     (index: number) => {
-      /*
-    const newTodos = todos.filter((_, _index) => _index !== index);
-    setTodos(newTodos);
-    */
-
       setTodos(
         produce(todos, (draft) => {
           draft.splice(index, 1);
@@ -263,14 +308,6 @@ export default function Todo() {
 
   const modifyTodo = useCallback(
     (index: number, inputedTodo: string) => {
-      /*
-    const newTodos = todos.map((todo, _index) =>
-      _index === index ? inputedTodo : todo
-    );
-
-    setTodos(newTodos);
-    */
-
       setTodos(
         produce(todos, (draft) => {
           draft[index] = inputedTodo;
@@ -283,13 +320,17 @@ export default function Todo() {
   const memoizedTodos = useMemo(() => todos, [todos]);
 
   return (
-    <>
+    <div className="max-w-3xl mx-auto py-8 px-4">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Todo 앱</h1>
+        <p className="text-gray-600">할 일을 관리하고 계획하세요</p>
+      </div>
       <NewTodoForm addTodo={addTodo} clearTodos={clearTodos} />
       <NewTodoList
         todos={memoizedTodos}
         removeTodo={removeTodo}
         modifyTodo={modifyTodo}
       />
-    </>
+    </div>
   );
 }
