@@ -32,6 +32,12 @@ const Header = () => {
           >
             TODO 앱
           </Link>
+          <Link
+            href="/fetchTest"
+            className="px-4 py-2 rounded-md bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors duration-200 font-medium"
+          >
+            fetch 테스트
+          </Link>
         </nav>
       </div>
     </header>
