@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Article {
   userId: number;
@@ -11,16 +11,43 @@ interface Article {
 
 export default function FetchTest() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [pageNo, setPageNo] = useState<number>(1);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const changePage = () => {
+    if (inputRef.current) {
+      const page = Number(inputRef.current.value);
+
+      setPageNo(page);
+    }
+  };
 
   // fetch는 promise 객체를 반환한다,
-  fetch("https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10")
-    .then((response) => response.json())
-    .then((data) => setArticles(data))
-    .catch((error) => console.log(error.message));
+  useEffect(() => {
+    console.log("fetch 실행");
+
+    fetch(
+      `https://jsonplaceholder.typicode.com/posts?_page=${pageNo}&_limit=10`
+    )
+      .then((response) => response.json())
+      .then((data) => setArticles(data))
+      .catch((error) => console.log(error.message));
+  }, [pageNo]);
 
   return (
     <>
-      <nav>
+      <div>fetchTest</div>
+      <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
+        <input className="input input-bordered" type="number" ref={inputRef} />
+        <button type="submit" className="btn btn-primary" onClick={changePage}>
+          전송
+        </button>
+      </form>
+      <nav className="mt-4">
         <ul>
           {articles.map((article) => {
             return (
