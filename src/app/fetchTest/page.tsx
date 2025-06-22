@@ -26,7 +26,8 @@ export default function FetchTest() {
     }
   };
 
-  // fetch는 promise 객체를 반환한다,
+  // v1
+  /*
   useEffect(() => {
     console.log("fetch 실행");
 
@@ -36,6 +37,28 @@ export default function FetchTest() {
       .then((response) => response.json())
       .then((data) => setArticles(data))
       .catch((error) => console.log(error.message));
+  }, [pageNo]);
+  */
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts?_page=${pageNo}&_limit=10`
+      );
+
+      if (!response.ok) {
+        throw new Error("네트워크 응답이 실패했습니다.");
+      }
+
+      const data = await response.json();
+      setArticles(data);
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [pageNo]);
 
   return (
